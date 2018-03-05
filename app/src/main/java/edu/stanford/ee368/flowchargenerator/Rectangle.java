@@ -21,6 +21,7 @@ public class Rectangle extends FlowchartShape {
 
 
     public Rectangle(Point center, int width, int height) {
+        super();
         this.center = center;
         this.width = width;
         this.height = height;
@@ -31,5 +32,10 @@ public class Rectangle extends FlowchartShape {
     @Override
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawRect(center.x - halfWidth, center.y - halfHeight, center.x + halfWidth, center.y + halfHeight, paint);
+    }
+
+    @Override
+    public Point getAnchor() {
+        return center;
     }
 }

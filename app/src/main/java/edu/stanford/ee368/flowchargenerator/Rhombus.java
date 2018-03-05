@@ -19,6 +19,7 @@ public class Rhombus extends FlowchartShape {
     private int halfHeight;
 
     public Rhombus(Point center, int width, int height) {
+        super();
         this.center = center;
         this.width = width;
         this.height = height;
@@ -36,5 +37,10 @@ public class Rhombus extends FlowchartShape {
         path.lineTo(center.x, center.y + halfHeight); // Back to Top
         path.close();
         canvas.drawPath(path, paint);
+    }
+
+    @Override
+    public Point getAnchor() {
+        return center;
     }
 }
