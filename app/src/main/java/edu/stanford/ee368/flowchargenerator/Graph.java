@@ -39,6 +39,11 @@ public class Graph {
         shape2.neighbors.add(shape4);
         shape4.neighbors.add(shape5);
         shape4.neighbors.add(shape6);
+        shape1.edges.add(new Edge(new Point(400, 300), new Point(800, 300)));
+        shape3.edges.add(new Edge(new Point(1400, 300), new Point(1000, 300)));
+        shape2.edges.add(new Edge(new Point(900, 400), new Point(900, 800)));
+        shape4.edges.add(new Edge(new Point(800, 900), new Point(300, 1400)));
+        shape4.edges.add(new Edge(new Point(1000, 900), new Point(1500, 1400)));
     }
 
     public void draw() {
@@ -46,6 +51,7 @@ public class Graph {
         paint.setColor(Color.WHITE);
         drawShapes(paint);
         paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(3);
         drawArrows(paint);
     }
 
@@ -78,8 +84,10 @@ public class Graph {
         }
         while (!queue.isEmpty()) {
             FlowchartShape from = queue.poll();
-            for (FlowchartShape to : from.neighbors) {
-                drawArrow(from.getAnchor(), to.getAnchor(), paint);
+            for (int i = 0; i < from.neighbors.size(); i++) {
+                FlowchartShape to = from.neighbors.get(i);
+                Edge edge = from.edges.get(i);
+                drawArrow(edge, paint);
                 int indeg = indegree.get(to) - 1;
                 indegree.put(to, indeg);
                 if (indeg == 0) {
@@ -89,7 +97,35 @@ public class Graph {
         }
     }
 
-    private void drawArrow(Point from, Point to, Paint paint) {
+    private void drawArrow(Edge edge, Paint paint) {
+        Point from = edge.from;
+        Point to = edge.to;
+        if (from.x == to.x || from.y == to.y) {
+            drawArrowLine(from, to, paint);
+            drawArrowHead(from, to, paint);
+        } else {
+            drawArrowLine(from, new Point(to.x, from.y), paint);
+            drawArrowLine(new Point(to.x, from.y), to, paint);
+            drawArrowHead(new Point(to.x, from.y), to, paint);
+        }
+    }
+
+    public double[] rotateVec(int px, int py, double ang, boolean isChLen, double newLen)
+    {
+        double mathstr[] = new double[2];
+        double vx = px * Math.cos(ang) - py * Math.sin(ang);
+        double vy = px * Math.sin(ang) + py * Math.cos(ang);
+        if (isChLen) {
+            double d = Math.sqrt(vx * vx + vy * vy);
+            vx = vx / d * newLen;
+            vy = vy / d * newLen;
+            mathstr[0] = vx;
+            mathstr[1] = vy;
+        }
+        return mathstr;
+    }
+
+    private void drawArrowHead(Point from, Point to, Paint paint) {
         double H = 30;
         double L = 20;
         int x3 = 0;
@@ -119,21 +155,9 @@ public class Graph {
         triangle.close();
 
         canvas.drawPath(triangle,paint);
-        canvas.drawLine(from.x, from.y, to.x, to.y, paint);
     }
 
-    public double[] rotateVec(int px, int py, double ang, boolean isChLen, double newLen)
-    {
-        double mathstr[] = new double[2];
-        double vx = px * Math.cos(ang) - py * Math.sin(ang);
-        double vy = px * Math.sin(ang) + py * Math.cos(ang);
-        if (isChLen) {
-            double d = Math.sqrt(vx * vx + vy * vy);
-            vx = vx / d * newLen;
-            vy = vy / d * newLen;
-            mathstr[0] = vx;
-            mathstr[1] = vy;
-        }
-        return mathstr;
+    private void drawArrowLine(Point from, Point to, Paint paint) {
+        canvas.drawLine(from.x, from.y, to.x, to.y, paint);
     }
 }

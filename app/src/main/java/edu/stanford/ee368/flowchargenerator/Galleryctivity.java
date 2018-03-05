@@ -58,7 +58,6 @@ public class Galleryctivity extends AppCompatActivity {
         Utils.bitmapToMat(imageBitmap, rgba);
         Imgproc.cvtColor(rgba, gray, Imgproc.COLOR_RGB2GRAY);
         Utils.matToBitmap(gray, grayBitmap);
-//        imageView.setImageBitmap(grayBitmap);
 
         View flowchartDrawView = new FlowchartDrawView(getApplicationContext(), new Graph());
         Canvas canvas = new Canvas(grayBitmap);

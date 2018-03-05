@@ -27,6 +27,10 @@ public class Rectangle extends FlowchartShape {
         this.height = height;
         this.halfWidth = width / 2;
         this.halfHeight = height / 2;
+        anchors.add(new Point(center.x, center.y-halfHeight));
+        anchors.add(new Point(center.x, center.y+halfHeight));
+        anchors.add(new Point(center.x-halfWidth, center.y));
+        anchors.add(new Point(center.x+halfWidth, center.y));
     }
 
     @Override
@@ -35,7 +39,7 @@ public class Rectangle extends FlowchartShape {
     }
 
     @Override
-    public Point getAnchor() {
+    public Point getCenter() {
         return center;
     }
 }
