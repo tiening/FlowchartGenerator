@@ -50,6 +50,33 @@ public class Graph {
         shape4.edges.add(new Edge(new Point(700, 350), new Point(900, 450)));
     }
 
+    public Graph(List<FlowchartShape> shapes, List<Edge> edges) {
+        flowchartShapes = new ArrayList<>();
+        for (Edge edge : edges) {
+            Point from = edge.from;
+            Point to = edge.to;
+            FlowchartShape closestToFrom = getClosestFlowchartShape(shapes, from);
+            FlowchartShape closestToTo = getClosestFlowchartShape(shapes, to);
+            Point anchorFrom = closestToFrom.getClosestAnchor(from);
+            Point anchorTo = closestToTo.getClosestAnchor(to);
+            closestToFrom.neighbors.add(closestToTo);
+            closestToFrom.edges.add(new Edge(anchorFrom, anchorTo));
+        }
+    }
+
+    private FlowchartShape getClosestFlowchartShape(List<FlowchartShape> shapes, Point point) {
+        double minDist = Double.MAX_VALUE;
+        FlowchartShape closestShape = shapes.get(0);
+        for (FlowchartShape shape : shapes) {
+            double dist = shape.getClosestAnchorDist(point);
+            if (dist < minDist) {
+                minDist = dist;
+                closestShape = shape;
+            }
+        }
+        return closestShape;
+    }
+
     public void draw() {
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);

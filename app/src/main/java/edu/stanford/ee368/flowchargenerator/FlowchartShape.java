@@ -43,6 +43,17 @@ public abstract class FlowchartShape {
         return res;
     }
 
+    public double getClosestAnchorDist(Point point) {
+        double minDist = Double.MAX_VALUE;
+        for (Point anchor : anchors) {
+            double dist = getDistance(point, anchor);
+            if (dist < minDist) {
+                minDist = dist;
+            }
+        }
+        return minDist;
+    }
+
     private static double getDistance(Point from, Point to) {
         return Math.sqrt(Math.pow(from.y-to.y,2)+Math.pow(from.x-to.x,2));
     }
