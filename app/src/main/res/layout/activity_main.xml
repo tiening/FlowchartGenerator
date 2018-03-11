@@ -16,9 +16,18 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Realtime Camera"
+        android:id="@+id/realtimeCameraButton"
+        android:onClick="launchRealtimeCameraActivity"
+        android:layout_below="@id/galleryButton"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Gallery"
         android:layout_below="@id/cameraButton"
         android:id="@+id/galleryButton"
         android:onClick="launchGalleryActivity"/>
+
 
 </RelativeLayout>

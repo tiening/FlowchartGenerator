@@ -11,6 +11,7 @@ import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -18,6 +19,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     Mat mat1;
     BaseLoaderCallback baseLoaderCallback;
+    Graph graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +43,31 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
                 }
             }
         };
+
+        graph = new Graph();
     }
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mat1 = inputFrame.rgba();
-
+        DrawThread thread = new DrawThread(mat1, graph);
+        thread.run();
         return mat1;
+    }
+
+    private class DrawThread extends Thread {
+        Mat mat;
+        Graph graph;
+        public DrawThread(Mat mat, Graph graph) {
+            this.mat = mat;
+            this.graph = graph;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            graph.draw(mat);
+        }
     }
 
     @Override

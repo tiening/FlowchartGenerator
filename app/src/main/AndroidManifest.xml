@@ -21,8 +21,9 @@
         </activity>
         <activity
             android:name=".CameraActivity"
-            android:screenOrientation="landscape"></activity>
-        <activity android:name=".Galleryctivity"></activity>
+            android:screenOrientation="landscape" />
+        <activity android:name=".Galleryctivity" />
+        <activity android:name=".RealtimeCameraActivity"></activity>
     </application>
 
 </manifest>

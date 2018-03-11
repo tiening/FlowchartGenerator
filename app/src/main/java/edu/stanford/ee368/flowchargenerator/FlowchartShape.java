@@ -3,6 +3,9 @@ package edu.stanford.ee368.flowchargenerator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,7 @@ public abstract class FlowchartShape {
     }
 
     public abstract void draw(Canvas canvas, Paint paint);
+    public abstract void draw(Mat mat, Scalar scalar, int thickness);
 
     public abstract Point getCenter();
 
@@ -43,5 +47,8 @@ public abstract class FlowchartShape {
         return Math.sqrt(Math.pow(from.y-to.y,2)+Math.pow(from.x-to.x,2));
     }
 
+    public static org.opencv.core.Point pointTranslator(Point point) {
+        return new org.opencv.core.Point(point.x, point.y);
+    }
 
 }

@@ -33,4 +33,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Galleryctivity.class);
         startActivity(intent);
     }
+
+    public void launchRealtimeCameraActivity(View view) {
+        Intent intent = new Intent(this, RealtimeCameraActivity.class);
+        startActivity(intent);
+    }
 }

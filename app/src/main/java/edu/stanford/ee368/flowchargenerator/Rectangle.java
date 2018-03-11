@@ -4,6 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import java.util.List;
 
 /**
@@ -36,6 +40,11 @@ public class Rectangle extends FlowchartShape {
     @Override
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawRect(center.x - halfWidth, center.y - halfHeight, center.x + halfWidth, center.y + halfHeight, paint);
+    }
+
+    @Override
+    public void draw(Mat mat, Scalar scalar, int thickness) {
+        Imgproc.rectangle(mat, new org.opencv.core.Point(center.x-halfWidth, center.y-halfHeight), new org.opencv.core.Point(center.x+halfWidth, center.y+halfHeight), scalar, thickness);
     }
 
     @Override
