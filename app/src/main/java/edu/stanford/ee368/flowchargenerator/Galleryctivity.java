@@ -13,9 +13,12 @@ import android.widget.ImageView;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
+
+import edu.stanford.ee368.flowchargenerator.imageproc.Helper;
 
 public class Galleryctivity extends AppCompatActivity {
 
@@ -54,12 +57,19 @@ public class Galleryctivity extends AppCompatActivity {
         int height = imageBitmap.getHeight();
         grayBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         Mat rgba = new Mat();
-        Mat gray = new Mat();
-        Utils.bitmapToMat(imageBitmap, rgba);
-        Imgproc.cvtColor(rgba, gray, Imgproc.COLOR_RGB2GRAY);
-        Utils.matToBitmap(gray, grayBitmap);
+        double size = 0.2;
+        int newWidth = (int) (imageBitmap.getWidth() * size);
+        int newHeight = (int) (imageBitmap.getHeight() * size);
+        Bitmap smaller = Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, true);
 
-        View flowchartDrawView = new FlowchartDrawView(getApplicationContext(), new Graph());
+//        Mat gray = new Mat();
+//        Utils.bitmapToMat(imageBitmap, rgba);
+        Utils.bitmapToMat(smaller, rgba);
+//        Imgproc.cvtColor(rgba, gray, Imgproc.COLOR_RGB2GRAY);
+//        Utils.matToBitmap(gray, grayBitmap);
+        Graph graph = Helper.getGraph(rgba);
+
+        View flowchartDrawView = new FlowchartDrawView(getApplicationContext(), graph);
         Canvas canvas = new Canvas(grayBitmap);
         flowchartDrawView.draw(canvas);
         imageView.setImageBitmap(grayBitmap);

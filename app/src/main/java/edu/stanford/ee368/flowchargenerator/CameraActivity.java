@@ -13,6 +13,8 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import edu.stanford.ee368.flowchargenerator.imageproc.Helper;
+
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     CameraBridgeViewBase cameraBridgeViewBase;
@@ -50,22 +52,22 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mat1 = inputFrame.rgba();
-        DrawThread thread = new DrawThread(mat1, graph);
+        DrawThread thread = new DrawThread(mat1);
         thread.run();
         return mat1;
     }
 
     private class DrawThread extends Thread {
         Mat mat;
-        Graph graph;
-        public DrawThread(Mat mat, Graph graph) {
+        public DrawThread(Mat mat) {
             this.mat = mat;
-            this.graph = graph;
+
         }
 
         @Override
         public void run() {
             super.run();
+            Graph graph = Helper.getGraph(mat);
             graph.draw(mat);
         }
     }

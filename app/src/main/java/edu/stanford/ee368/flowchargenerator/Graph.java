@@ -52,6 +52,9 @@ public class Graph {
 
     public Graph(List<FlowchartShape> shapes, List<Edge> edges) {
         flowchartShapes = new ArrayList<>();
+        if (shapes.isEmpty()) {
+            return;
+        }
         for (Edge edge : edges) {
             Point from = edge.from;
             Point to = edge.to;
@@ -62,6 +65,7 @@ public class Graph {
             closestToFrom.neighbors.add(closestToTo);
             closestToFrom.edges.add(new Edge(anchorFrom, anchorTo));
         }
+        flowchartShapes.addAll(shapes);
     }
 
     private FlowchartShape getClosestFlowchartShape(List<FlowchartShape> shapes, Point point) {
@@ -177,25 +181,27 @@ public class Graph {
     private void drawArrow(Edge edge, Paint paint) {
         Point from = edge.from;
         Point to = edge.to;
-        if (from.x == to.x || from.y == to.y) {
-            drawArrowLine(from, to, paint);
-            drawArrowHead(from, to, paint);
-        } else {
-            drawArrowLine(from, new Point(to.x, from.y), paint);
-            drawArrowLine(new Point(to.x, from.y), to, paint);
-            drawArrowHead(new Point(to.x, from.y), to, paint);
-        }
+        drawArrowLine(from, to, paint);
+//        if (from.x == to.x || from.y == to.y) {
+//            drawArrowLine(from, to, paint);
+//            drawArrowHead(from, to, paint);
+//        } else {
+//            drawArrowLine(from, new Point(to.x, from.y), paint);
+//            drawArrowLine(new Point(to.x, from.y), to, paint);
+//            drawArrowHead(new Point(to.x, from.y), to, paint);
+//        }
     }
 
     private void drawArrow(Edge edge, Mat mat, Scalar scalar, int thickness, double tipLength) {
         Point from = edge.from;
         Point to = edge.to;
-        if (from.x == to.x || from.y == to.y) {
-            drawArrowLine(from, to, mat, scalar, thickness, tipLength);
-        } else {
-            drawLine(from, new Point(to.x, from.y), mat, scalar, thickness);
-            drawArrowLine(new Point(to.x, from.y), to, mat, scalar, thickness, tipLength);
-        }
+        drawArrowLine(from, to, mat, scalar, thickness, tipLength);
+//        if (from.x == to.x || from.y == to.y) {
+//            drawArrowLine(from, to, mat, scalar, thickness, tipLength);
+//        } else {
+//            drawLine(from, new Point(to.x, from.y), mat, scalar, thickness);
+//            drawArrowLine(new Point(to.x, from.y), to, mat, scalar, thickness, tipLength);
+//        }
     }
 
     public double[] rotateVec(int px, int py, double ang, boolean isChLen, double newLen)
