@@ -1,5 +1,6 @@
 package edu.stanford.ee368.flowchargenerator;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.SurfaceView;
@@ -14,6 +15,7 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 import edu.stanford.ee368.flowchargenerator.imageproc.Helper;
+import edu.stanford.ee368.flowchargenerator.imageproc.PrePro;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -21,7 +23,11 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     Mat mat1;
     BaseLoaderCallback baseLoaderCallback;
-    Graph graph;
+    Graph mGraph;
+
+    boolean isProcessing;
+
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,8 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         cameraBridgeViewBase = (JavaCameraView) findViewById(R.id.myCameraView);
         cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
         cameraBridgeViewBase.setCvCameraViewListener(this);
+        isProcessing = false;
+        progressBar = new ProgressBar(100,10,900,11);
 
         baseLoaderCallback = new BaseLoaderCallback(this) {
             @Override
@@ -46,28 +54,54 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
             }
         };
 
-        graph = new Graph();
+        mGraph = new Graph();
     }
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mat1 = inputFrame.rgba();
-        DrawThread thread = new DrawThread(mat1);
-        thread.run();
+        if (!isProcessing) {
+            new DrawAsyncTask().execute(mat1);
+        } else {
+            mGraph.draw(mat1);
+        }
+        progressBar.draw(mat1);
         return mat1;
+    }
+
+    private class DrawAsyncTask extends AsyncTask<Mat, Void, Graph> {
+
+        DrawAsyncTask() {
+            isProcessing = true;
+        }
+
+        @Override
+        protected Graph doInBackground(Mat... mats) {
+            Mat mat = mats[0];
+            return Helper.getGraph(mat, progressBar);
+        }
+
+        @Override
+        protected void onPostExecute(Graph graph) {
+            super.onPostExecute(graph);
+            System.out.println("Executed");
+            mGraph = graph;
+            isProcessing = false;
+            mGraph.draw(mat1);
+            System.out.println("Finish drawing");
+        }
     }
 
     private class DrawThread extends Thread {
         Mat mat;
         public DrawThread(Mat mat) {
             this.mat = mat;
-
         }
 
         @Override
         public void run() {
             super.run();
-            Graph graph = Helper.getGraph(mat);
+            Graph graph = Helper.getGraph(mat, progressBar);
             graph.draw(mat);
         }
     }

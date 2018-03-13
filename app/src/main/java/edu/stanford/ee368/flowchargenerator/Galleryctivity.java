@@ -67,7 +67,7 @@ public class Galleryctivity extends AppCompatActivity {
         Utils.bitmapToMat(smaller, rgba);
 //        Imgproc.cvtColor(rgba, gray, Imgproc.COLOR_RGB2GRAY);
 //        Utils.matToBitmap(gray, grayBitmap);
-        Graph graph = Helper.getGraph(rgba);
+        Graph graph = Helper.getGraph(rgba, null);
 
         View flowchartDrawView = new FlowchartDrawView(getApplicationContext(), graph);
         Canvas canvas = new Canvas(grayBitmap);
